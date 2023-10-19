@@ -11,7 +11,7 @@ project(${CMAKE_PROJECT_NAME})
 
 find_package(OpenGL REQUIRED)
 
-file(GLOB SOURCES main.cpp engine/*.cpp)
+file(GLOB SOURCES 3d.cpp engine/*.cpp)
 file(GLOB HEADERS engine/*.h engine/*.hpp)
 
 # if (MSVC)

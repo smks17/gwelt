@@ -46,7 +46,7 @@ void Window::init_window()
 
 void color_screen(float red, float green, float blue, float alpha) {
     glClearColor(red, green, blue, alpha);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 
