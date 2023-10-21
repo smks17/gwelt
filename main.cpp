@@ -3,10 +3,16 @@
 #include "engine/gwelt.h"
 
 #include "engine/buffer.h"
+#include "engine/commonType.h"
 #include "engine/shader.h"
+#include "engine/object.h"
 #include "engine/texture.h"
 #include "engine/vertex.h"
 #include "engine/window.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 #define WINDOW_WIDTH  800
@@ -22,48 +28,29 @@ int main () {
        return -1;
     }
 
-    float vertices[] = {
-        -0.5f,  0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-        0.5f ,  0.5f, 0.0f,
-        0.5f , -0.5f, 0.0f
-    };
-    GW::BufferData * vertices_data = new GW::BufferData{(void *)vertices, sizeof(vertices), 3};
-    GW::Buffer *VBO = new GW::Buffer(vertices_data);
+    GW::Point2D **loc = new GW::Point2D*[4];
+    loc[0] = new GW::Point2D(-0.5f,  0.5f);
+    loc[1] = new GW::Point2D(-0.5f, -0.5f);
+    loc[2] = new GW::Point2D(0.5f ,  0.5f);
+    loc[3] = new GW::Point2D(0.5f , -0.5f);
 
-    float color[] = {
-        0.0f, 1.0f, 0.0f,
-        1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 0.0f
-    };
-    GW::BufferData * color_data = new GW::BufferData{(void *)color, sizeof(color), 3};
-    GW::Buffer *VBO_color = new GW::Buffer(color_data);
-
-    float tex_coords[] = {
+    float tex_coords [] = {
         0.0f, 1.0f,
         0.0f, 0.0f,
         1.0f, 1.0f,
         1.0f, 0.0f
     };
-    GW::BufferData * tex_coords_data = new GW::BufferData{(void *)tex_coords, sizeof(tex_coords), 2};
-    GW::Buffer *VBO_tex_coord = new GW::Buffer(tex_coords_data);
 
     unsigned int indices[] = {
         0, 1, 2,
         1, 2, 3
     };
-    GW::BufferData * IBO = new GW::BufferData{(void *)indices, sizeof(indices), 6};
-    GW::IndexBuffer EBO(IBO);
 
-    GW::VertexArray VAO;
-    VAO.add_buffer(VBO, 0);
-    VAO.add_buffer(VBO_color, 1);
-    VAO.add_buffer(VBO_tex_coord, 2);
+    GW::Object2D obj(loc, (size_t)4, tex_coords, indices, (size_t)6);
 
     GW::Texture texture;
     if (!texture.load("resources/smile.jpg", GL_REPEAT, GL_REPEAT))
-        std::cerr << "ERROR: Texture could not load proparely" << std::endl;
+        std::cerr << "ERROR: Texture could not load properly" << std::endl;
 
     GW::Shader shader("resources/vertexShader.glsl", "resources/fragmentShader.glsl");
 
@@ -80,14 +67,8 @@ int main () {
         shader.set_4_matrix_float("transform", glm::value_ptr(transform));
 
         texture.active_and_bind();
-
         shader.use();
-
-        VAO.bind();
-        EBO.bind();
-        glDrawElements(GL_TRIANGLES, EBO.get_component(), GL_UNSIGNED_INT, 0);
-        EBO.unbind();
-        VAO.unbind();
+        obj.render();
 
         window.swap_buffer();
         window.poll_events();

@@ -8,7 +8,7 @@ namespace GW {
 struct BufferData {
     void *data;
     size_t size;
-    int number_component;
+    size_t number_component;
 };
 
 
@@ -31,7 +31,7 @@ public:
         glBindBuffer(m_target, 0);
     }
 
-    inline int get_component() const { return m_data_buffer->number_component; }
+    inline size_t get_component() const { return m_data_buffer->number_component; }
 };
 
 class IndexBuffer : public Buffer {
