@@ -2,14 +2,14 @@
 
 namespace GW {
 
-void Object::bind() {
+void Object::bind() const {
     m_VAO->bind();
     if (m_IBO)
         m_IBO->bind();
 }
 
 
-void Object::unbind() {
+void Object::unbind() const {
     if (m_IBO)
         m_IBO->unbind();
     m_VAO->unbind();
@@ -26,7 +26,6 @@ Object2D::Object2D(Point2D **loc, size_t n_point, Color **color, size_t *indices
     }
     GW::BufferData * vertices_data = new GW::BufferData{(void *)vertices, SIZEOF_VERTICES, 3};
     GW::Buffer *VBO = new GW::Buffer(vertices_data);
-    m_vertext_number = n_point;
 
     float *colors = new float[n_point * 4];
     const size_t SIZEOF_COLORS = (n_point * 4) * sizeof(float);
@@ -44,6 +43,7 @@ Object2D::Object2D(Point2D **loc, size_t n_point, Color **color, size_t *indices
         GW::BufferData * indices_data = new GW::BufferData{(void *)indices, n_indices * sizeof(unsigned int), n_indices};
         m_IBO = new GW::IndexBuffer(indices_data);
     }
+    m_vertex_number = n_indices;
 
     m_VAO = new GW::VertexArray;
     m_VAO->add_buffer(VBO, 0);
@@ -61,7 +61,6 @@ Object2D::Object2D(Point2D **loc, size_t n_point, float* tex_coords, unsigned in
     }
     GW::BufferData * vertices_data = new GW::BufferData{(void *)vertices, SIZEOF_VERTICES, 3};
     GW::Buffer *VBO = new GW::Buffer(vertices_data);
-    m_vertext_number = n_point;
 
     const size_t SIZEOF_TEX_COORDS = (n_point * 2) * sizeof(float);
     GW::BufferData * tex_coords_data = new GW::BufferData{(void *)tex_coords, SIZEOF_TEX_COORDS, 2};
@@ -71,6 +70,7 @@ Object2D::Object2D(Point2D **loc, size_t n_point, float* tex_coords, unsigned in
         GW::BufferData * indices_data = new GW::BufferData{(void *)indices, n_indices * sizeof(unsigned int), n_indices};
         m_IBO = new GW::IndexBuffer(indices_data);
     }
+    m_vertex_number = n_indices;
 
     m_VAO = new GW::VertexArray;
     m_VAO->add_buffer(VBO, 0);
@@ -78,10 +78,10 @@ Object2D::Object2D(Point2D **loc, size_t n_point, float* tex_coords, unsigned in
 }
 
 
-void Object2D::render() {
+void Object2D::render() const {
     bind();
     if (m_IBO) glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_IBO->get_component()), GL_UNSIGNED_INT, 0);
-    // else glDrawArrays(GL_ARRAY, 0, m_vertex_number);
+    else glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(m_vertex_number));
     unbind();
 }
 
