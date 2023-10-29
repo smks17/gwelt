@@ -29,6 +29,15 @@ public:
     void render() const override;
 };
 
+
+class Object3D : public Object {
+public:
+    Object3D(Point3D **loc, size_t n_point, Color **color, size_t *indices, size_t n_indices);
+    Object3D(Point3D **loc, size_t n_point, float* tex_coords, unsigned int *indices, size_t n_indices);
+    void render() const override;
+};
+
+
 };
 
 #endif  // GWELT_OBJECT_H

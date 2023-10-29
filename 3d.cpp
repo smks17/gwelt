@@ -3,8 +3,10 @@
 #include "engine/gwelt.h"
 
 #include "engine/buffer.h"
+#include "engine/commonType.h"
 #include "engine/shader.h"
 #include "engine/texture.h"
+#include "engine/object.h"
 #include "engine/vertex.h"
 #include "engine/window.h"
 
@@ -29,53 +31,51 @@ int main () {
 
     glEnable(GL_DEPTH_TEST);
 
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f,  0.5f, -0.5f,
-        0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
+    GW::Point3D ** vertices = new GW::Point3D*[36] {
+        new GW::Point3D(-0.5f, -0.5f, -0.5f),
+        new GW::Point3D(0.5f, -0.5f, -0.5f),
+        new GW::Point3D(0.5f,  0.5f, -0.5f),
+        new GW::Point3D(0.5f,  0.5f, -0.5f),
+        new GW::Point3D(-0.5f,  0.5f, -0.5f),
+        new GW::Point3D(-0.5f, -0.5f, -0.5f),
 
-        -0.5f, -0.5f,  0.5f,
-        0.5f, -0.5f,  0.5f,
-        0.5f,  0.5f,  0.5f,
-        0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
+        new GW::Point3D(-0.5f, -0.5f,  0.5f),
+        new GW::Point3D(0.5f, -0.5f,  0.5f),
+        new GW::Point3D(0.5f,  0.5f,  0.5f),
+        new GW::Point3D(0.5f,  0.5f,  0.5f),
+        new GW::Point3D(-0.5f,  0.5f,  0.5f),
+        new GW::Point3D(-0.5f, -0.5f,  0.5f),
 
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
+        new GW::Point3D(-0.5f,  0.5f,  0.5f),
+        new GW::Point3D(-0.5f,  0.5f, -0.5f),
+        new GW::Point3D(-0.5f, -0.5f, -0.5f),
+        new GW::Point3D(-0.5f, -0.5f, -0.5f),
+        new GW::Point3D(-0.5f, -0.5f,  0.5f),
+        new GW::Point3D(-0.5f,  0.5f,  0.5f),
 
-        0.5f,  0.5f,  0.5f,
-        0.5f,  0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f,  0.5f,
-        0.5f,  0.5f,  0.5f,
+        new GW::Point3D(0.5f,  0.5f,  0.5f),
+        new GW::Point3D(0.5f,  0.5f, -0.5f),
+        new GW::Point3D(0.5f, -0.5f, -0.5f),
+        new GW::Point3D(0.5f, -0.5f, -0.5f),
+        new GW::Point3D(0.5f, -0.5f,  0.5f),
+        new GW::Point3D(0.5f,  0.5f,  0.5f),
 
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f,  0.5f,
-        0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f, -0.5f,
+        new GW::Point3D(-0.5f, -0.5f, -0.5f),
+        new GW::Point3D(0.5f, -0.5f, -0.5f),
+        new GW::Point3D(0.5f, -0.5f,  0.5f),
+        new GW::Point3D(0.5f, -0.5f,  0.5f),
+        new GW::Point3D(-0.5f, -0.5f,  0.5f),
+        new GW::Point3D(-0.5f, -0.5f, -0.5f),
 
-        -0.5f,  0.5f, -0.5f,
-        0.5f,  0.5f, -0.5f,
-        0.5f,  0.5f,  0.5f,
-        0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
+        new GW::Point3D(-0.5f,  0.5f, -0.5f),
+        new GW::Point3D(0.5f,  0.5f, -0.5f),
+        new GW::Point3D(0.5f,  0.5f,  0.5f),
+        new GW::Point3D(0.5f,  0.5f,  0.5f),
+        new GW::Point3D(-0.5f,  0.5f,  0.5f),
+        new GW::Point3D(-0.5f,  0.5f, -0.5f)
     };
-    GW::BufferData * vertices_data = new GW::BufferData{(void *)vertices, sizeof(vertices), 3};
-    GW::Buffer *VBO = new GW::Buffer(vertices_data);
 
-    float tex_coords[] = {
+    float * tex_coords = new float[] {
         0.0f, 0.0f,
         1.0f, 0.0f,
         1.0f, 1.0f,
@@ -118,12 +118,8 @@ int main () {
         0.0f, 0.0f,
         0.0f, 1.0f
     };
-    GW::BufferData * tex_coords_data = new GW::BufferData{(void *)tex_coords, sizeof(tex_coords), 2};
-    GW::Buffer *VBO_tex_coord = new GW::Buffer(tex_coords_data);
 
-    GW::VertexArray VAO;
-    VAO.add_buffer(VBO, 0);
-    VAO.add_buffer(VBO_tex_coord, 1);
+    GW::Object3D obj(vertices, (size_t)36, tex_coords, nullptr, (size_t)36);
 
     glm::vec3 cube_pos[] = {
         glm::vec3( 0.0f,  0.0f,  0.0f),
@@ -159,17 +155,14 @@ int main () {
         texture.active_and_bind();
 
         shader.use();
-
-        VAO.bind();
         for(unsigned int i = 0 ; i < 4 ; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cube_pos[i]);
             float angle = 3.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             shader.set_4_matrix_float("model", glm::value_ptr(model));
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            obj.render();
         }
-        VAO.unbind();
 
         window.swap_buffer();
         window.poll_events();
