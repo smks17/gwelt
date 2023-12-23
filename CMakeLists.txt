@@ -46,9 +46,6 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL        OFF CACHE BOOL "" FORCE)
 add_subdirectory(ThirdParty/${GLFW_LIB_NAME})
 
-set(GLM_LIB_NAME glm)
-add_subdirectory(ThirdParty/${GLM_LIB_NAME})
-
 # Glad
 set(GLAD_LIB_NAME "glad")
 set(GLAD_SRC_PATH "ThirdParty/${GLAD_LIB_NAME}/src")
@@ -63,7 +60,6 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC
     ${OPENGL_gl_LIBRARY}
     ${GLFW_LIB_NAME}
-    ${GLM_LIB_NAME}
     ${GLAD_LIB_NAME}
 )
 

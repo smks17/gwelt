@@ -10,9 +10,7 @@
 #include "engine/vertex.h"
 #include "engine/window.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "engine/gwla/gwla.hpp"
 
 
 #define WINDOW_WIDTH  800
@@ -62,9 +60,10 @@ int main () {
         GW::color_screen(0.18f, 0.18f, 0.18f, 1.0f);
 
         // transform
-        glm::mat4 transform = glm::mat4(1.0f);
-        transform = glm::rotate(transform, static_cast<float>(glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
-        shader.set_4_matrix_float("transform", glm::value_ptr(transform));
+        GW::Mat4 transform(1.0f);
+        GW::Vec3 axis(1.0f, 0.0f, 0.0f);
+        transform = GW::rotate(transform, static_cast<float>(glfwGetTime()), axis);
+        shader.set_4_matrix_float("transform", transform.ptr());
 
         texture.active_and_bind();
         shader.use();
